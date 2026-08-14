@@ -1,200 +1,226 @@
 ---
 title: "Week_1"
-format: html
+format: pdf
 editor: visual
 ---
 
 # Introduction
 
+Welcome! This first session covers the basics you need to learning R: installing R and RStudio, organizing a project, understanding the RStudio interface, and the core building blocks of the R language (objects, functions, operators, and loops).
+
 ## Install R and R studio
 
-R software: <https://cran.r-project.org/bin/windows/base/R-4.6.1-win.exe>
+- **R** is the programming language and engine that actually runs your code.
+- **RStudio** is the interface (IDE) that makes working with R easier — script editor, console, plots, help.
 
-RStudio: <https://posit.co/downloads>
+1.  Install R: <https://cran.r-project.org/bin/windows/base/R-4.6.1-win.exe>
 
-R bible:
+2.  Install RStudio: <https://posit.co/downloads>
 
-Github:
+3.  R bible: <https://r4ds.hadley.nz/>, *R for Data Science*
 
-## Project, folder organization and good practices
+## Project and folder organization — good practices
 
-1.  Create a general folder for your research project.
-2.  Split your folder into data, outputs, R script, papers (personal way - there is no recipe)
-3.  Good practices: commenting the code - all information that you consider relevant. Outline (layout). Writing standard
+1.  Create one general folder per research project
+2.  Split the folder into subfolders. A common structure (there's no single "correct" recipe, adapt to your workflow):
+    - `data/` — raw and processed data
+    - `scripts/` (or `R/`) — your `.R` / `.qmd` scripts
+    - `outputs/` — figures, tables, model results
+    - `papers/` or `docs/` — literature, manuscripts, notes
+3.  Good coding practices:
+    - **Comment your code**. Future-you (and your collaborators) will thank you.
+    - **Use an outline/layout** — section headers (`#`, `##`, `###` in comments or Markdown) keep long scripts navigable.
+    - **Use a consistent naming/writing standard** — e.g. always `snake_case` for object names, consistent indentation, consistent spacing around `<-`.
 
 ## Interface R
 
-1.  R Script
-2.  Console
-3.  Environment,
-4.  Files, plots, packages, help
+RStudio is organized into four main panes:
+
+1.  **Source / R Script** (top-left) — where you write and save code.
+2.  **Console** (bottom-left) — where code actually runs and have the error messages.
+3.  **Environment / History** (top-right) — shows the objects currently loaded in memory, and a record of past commands.
+4.  **Files / Plots / Packages / Help** (bottom-right) — file browser, plot viewer, package manager, and documentation.
 
 ## Logical programming
 
-Process thinking
+Programming means telling the computer a precise sequence of steps — think of it as a recipe. Before writing code, it helps to think through the logic first: what are the inputs, what steps happen, what is the output?
 
-1 + 1 x 2
+## Keyboard shortcuts
 
-```{r}
-library(tidyverse)
-a <- 1:10
+| Shortcut                 | Action                                      |
+|--------------------------|---------------------------------------------|
+| **Ctrl + Enter**         | Run current line / selection                |
+| **Alt + -**              | Insert `<-`                                 |
+| **Ctrl + Alt + I**       | Insert a new code chunk (R Markdown/Quarto) |
+| **Ctrl + Shift + M**     | Insert pipe `%>%`                           |
+| **Ctrl + Shift + C**     | Comment/uncomment selected lines            |
+| **Ctrl + L**             | Clear the console                           |
+| **Ctrl + Shift + Enter** | Run entire chunk                            |
 
-a <- seq(1, 10, 1)
+## Operators
 
-sum(sqrt(a))
-a %>% 
-  sqrt() %>%
-  sum()
+**Arithmetic:** `+`, `-`, `/`, `*`, `%*%` (matrix multiplication), `^` (power)
 
+**Relational:** `>`, `<`, `>=`, `<=`, `==` (equal to), `!=` (not equal to)
 
-```
-
-## Shortcut
-
-**Ctrl + Enter** = run code
-
-**Alt + -** = "\<-"
-
-**Ctrl + Alt + i** = chunck
-
-**Ctrl + Shift + m** = %>% (pipe)
-
-**Ctrl + Shift + c** = add multiple comments
-
-
-## Operators: calculator and booleans
-
-1.  +, -, /, \*, %\*%, \^
-
-2.  \> , \<, \>=, \<=, ==, !=, &, \|
+**Logical:** `&` (and), `|` (or), `!` (not)
 
 ```{r}
-2 ^ 3
-
-v = 2
-m =3 
-
-v * m
-
+3 ^ 3
+2 * 3
+2 + 3
+2 - 3
+2 / 3
 ```
 
 ```{r}
-3 >2
-
+3 > 2
 3 == 2
 
-&
-
+TRUE & FALSE   # AND -> both must be true
+TRUE | FALSE   # OR  -> at least one must be true
+!TRUE          # NOT -> flips the value
 ```
 
+# Types of objects in R
 
-## Types of objects in R
+Good object names: short, clear, self-explanatory, no spaces, avoid starting with numbers, avoid special characters (use `_` instead).
 
-Good names of object: short, clean, self explain, no space, no numbers, no special characters.
-
-1.  Integer
-2.  Numeric
-3.  Character
-4.  Logical
-5.  Matrix
-6.  Dataframe (Data structure board)
-7.  Obs: vector (not a type)
+1.  **Integer** — whole numbers
+2.  **Numeric** (double) — decimal numbers
+3.  **Character** — text/strings
+4.  **Logical** — `TRUE` / `FALSE`
+5.  **Vector** — a sequence of values\
+6.  **Matrix** — a 2-dimensional structure
+7.  **Data frame** — a table with observation and variables
+8.  **List** — a flexible container that can hold objects of different types and sizes together
 
 ```{r}
-a = 1
-a = as.integer(a)
+a <- 1
+a <- as.integer(a)
+class(a)
 
-b = 2.3
-c = "Yuri"
-c <- c("2", "3")
+b <- 2.3
+class(b)
 
-d = TRUE
-e = matrix(c(1:4), ncol = 2)
-f = data.frame(yield = c(80,90, 100),
-               N_rate = c(20, 50, 80),
-               Location = "Ashland",
-               wheat = c(T, T, F))
+c_var <- c("2", "3")   # character vector
+class(c_var)
 
+d <- TRUE
+class(d)
+
+e <- matrix(c(1:4), ncol = 2)
+e
+
+f <- data.frame(
+  yield    = c(80, 90, 100),
+  N_rate   = c(20, 50, 80),
+  Location = "Ashland",
+  wheat    = c(TRUE, TRUE, FALSE)
+)
+f
+str(f)
 ```
 
+# Function and packages
 
-## Function and packages
+**What is a function?** A set of instructions, packaged under a name, that executes a sequence of operations on some input and returns a result. Instead of retyping the same steps every time, you call the function.
 
-- What is a function?
+**Common built-in functions:**
 
-- What is a function? To execute a sequence of operation
-
-- Main functions
-
-1.  sum()
-
-2.  read_xlsx()
-
-3.  summary()
-
-4.  head(), tail()
-
-5.  str()
-
-6.  sqrt()
-
-7.  table()
-
-8.  seq()
-
-9.  lenght()
-
-1. Colnames()
+1.  `sum()`
+2.  `read_xlsx()` / `read.csv()`
+3.  `summary()`
+4.  `head()`, `tail()`
+5.  `str()`
+6.  `sqrt()`
+7.  `table()`
+8.  `seq()`
+9.  `length()`
+10. `colnames()`
+11. `print()`
 
 ```{r}
-set.seed(10)
-rnorm(10, mean = 1, sd = 2)
+c(1,2,3,4,5,6,7,8,9,10)
+c(1:10)
+seq(1, 10, 1)
 ```
 
-- What is a package? It's a set of functions
+**What is a package?** A collection of functions (and sometimes data) written by someone else, that you can install and load to expand what R can do without needing anything else.
 
-- How to install and use a package?
+**Installing and using a package:**
 
 ```{r}
-# install.packages("")
-# "package":: to use just specific function
-# library()
+# install.packages("dplyr")   # run once, to download the package
+# dplyr::filter()              # use one function without loading the whole package
+# library(dplyr)               # load the whole package for the session
 ```
 
-- Main Packages
+**Main packages:**
 
-1.  base - base package (already installed)
+1.  **base** — pre-installed, core R functions
+2.  **ggplot2** — data visualization
+3.  **dplyr** — data manipulation/analysis
+4.  **readxl** — reading Excel files
+5.  **tidyr** — reshaping data (long/wide formats)
 
-2.  ggplot2 - data visualization
+## Writing your own function
 
-3.  dplyr - data analysis
+General structure:
 
-4.  readxl - open excel file
+```{r, eval: false}
 
-## Function
+new_function <- function(a, b, c) {
 
-- How to create a function?
+  # commands / calculations
 
-Main structure
-
-```{r}
-new_function <- funtion(a, b, c){
-  
-  # command
-  
-  #return(result)
-  
+  return(result)
 }
 ```
 
-Arguments
-Fixed set of objects
+Example:
 
+```{r}
+my_mean <- function(a, b) {
+  result <- (a + b) / 2
+  return(result)
+}
+
+my_mean(2, 4)
+```
 
 ## Loops
 
+Loops repeat a task a set number of times, or until a condition is no longer true.
 
+- `for()` — repeat a fixed, known number of times
+- `while()` — repeat as long as a condition stays true
 
+Structure:
 
+```{r}
+n = 10
+for(i in 1:n){
+  print(i)
+}
+```
 
-# What is your goal?
+```{r}
+i= 1
+while(i < n) {
+  
+  print(i)
+  
+  i = i + 1
+}
+
+```
+
+# Conditions
+
+# Practice exercises
+
+1.  Create a vector `n_rates` with the values 0, 40, 80, 120, 160 (kg N/ha).
+2.  Create a data frame with three columns: `plot` (1 to 5), `n_rate` (`n_rates` above), and `yield` (make up five plausible wheat yield values).
+3.  Write a function `kg_to_lb(kg)` that converts kilograms to pounds (1 kg = 2.2046 lb) and test it on your `yield` column.
+4.  Write a `for` loop that prints "Plot X received Y kg N/ha" for each row of your data frame.
