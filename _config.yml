@@ -6,7 +6,7 @@ website:
   title: "R Workshop"
   navbar:
     left:
-      - href: week_1.qmd
+      - href: index.htmls
         text: Week 1
 
 format:
