@@ -1,0 +1,15 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "R Workshop"
+  navbar:
+    left:
+      - href: week_1.qmd
+        text: Week 1
+
+format:
+  html:
+    toc: true
+    theme: cosmo
