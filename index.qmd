@@ -1,11 +1,10 @@
 ---
 title: "R Workshop"
+format:
+  html:
+    include-in-header:
+      text: |
+        <meta http-equiv="refresh" content="0; url=week_1.html">
 ---
 
-# R Workshop
-
-Welcome to the R Workshop.
-
-## Workshop materials
-
-[Start Week 1](week_1.qmd)
+If you are not redirected automatically, [open Week 1](week_1.html).
