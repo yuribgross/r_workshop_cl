@@ -1,0 +1,13 @@
+---
+title: "index"
+format: html
+editor: visual
+---
+
+---
+title: "R Workshop"
+---
+
+Welcome to the R Workshop.
+
+[Go to Week 1](week_1.qmd)

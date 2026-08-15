@@ -221,6 +221,27 @@ while(i < n) {
 # Practice exercises
 
 1.  Create a vector `n_rates` with the values 0, 40, 80, 120, 160 (kg N/ha).
+```{r}
+
+n_rates = c(0,40,80,120,160)
+
+```
+
 2.  Create a data frame with three columns: `plot` (1 to 5), `n_rate` (`n_rates` above), and `yield` (make up five plausible wheat yield values).
+
+```{r}
+
+data.frame(plot = c(1:5), 
+           n_rate = n_rates,
+           yield = c(20,30,40,50,60))
+
+```
+
+
 3.  Write a function `kg_to_lb(kg)` that converts kilograms to pounds (1 kg = 2.2046 lb) and test it on your `yield` column.
+
+
 4.  Write a `for` loop that prints "Plot X received Y kg N/ha" for each row of your data frame.
+
+
+
