@@ -245,3 +245,6 @@ data.frame(plot = c(1:5),
 
 
 
+git checkout --ours index.qmd
+git checkout --ours week_1.qmd
+git checkout --ours week_1.html
