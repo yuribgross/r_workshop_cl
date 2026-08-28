@@ -1,0 +1,307 @@
+---
+title: "Week 3"
+author: "Hintz A and Gross Y."
+date: "2026-08-25"
+output: html_document
+---
+```{r, echo=FALSE}
+knitr::opts_chunk$set(eval = T, message = F, warning = F, dpi = 200, fig.width = 5, fig.height = 3)
+```
+
+# Review exercises 1
+
+1.  Create a vector `n_rates` with the values 0, 40, 80, 120, 160 (kg N/ha).
+
+2.  Create a data frame with three columns: `plot` (1 to 5), `n_rate` (`n_rates` above), and `yield` (make up five plausible wheat yield values).
+
+3.  Write a function `kg_to_lb` that converts kilograms to pounds (1 kg = 2.2046 lb) and test it on your `yield` column.
+
+4.  Write a `for` loop that prints "Plot *X* received *Y* kg N/ha" for each row of your data frame.
+
+5.  Write a function `soil_ph()` that takes a single soil pH value as input and, using if/else, returns "Acidic" if the pH is below 7, and "Alkaline" if it's above 7.
+
+# Review exercises 2
+
+The exercises are based on the data `yield.xlsx`, so first read the file and save it in the object `df`.
+
+```{r}
+#install.packages("readxl")
+library(tidyverse)
+library(readxl)
+df <- read_xlsx("yield.xlsx")
+```
+
+1. Verify how many observations and variables are in the dataset and what are the categories of the variables.
+
+2. Select just the column `location`, `plot`, `block`, `trt`, `system`, `wheat_yield_bu_acre_13.5`,
+`soy_yield_bu_acre_13`
+
+3. Rename the variables that contain the wheat and soybean yield.
+
+4. Verify if there are any NAs in the dataset.
+
+5. Filter only the SW system and calculate the mean wheat yield for each location.
+
+6. Calculate the mean and standard deviation for each system for wheat and soybean yield.
+
+# New exercise
+
+1. Create a new variable called yield_class that classifies the wheat yield as "High" if the yield is greater than or equal to 60 bu/ac and "Low" otherwise.
+
+
+2. Create a function check_negative() that receives a yield variable and verifies if there are any negative values. If negative values are found, return a warning message; otherwise, return a message indicating that the data are valid.
+
+Tip: Use the function any() to check whether at least one value in a logical condition is TRUE. For example, any(x < 0) returns TRUE if at least one value of x is negative.
+
+
+# ggplot
+
+`ggplot2` is a package used to create graphs in R.  
+The basic idea is to start with a dataset and then add different layers to build the plot.
+
+```{r}
+dat_cb <- read_xlsx("crop_biomass_2025.xlsx")
+```
+
+
+## ggplot(): start a ggplot object 
+
+The `ggplot()` function initializes a plot.  
+By itself, it creates an empty plotting object.
+
+```{r}
+ggplot()
+```
+
+Usually, we provide the dataset inside `ggplot()` and use `aes()` to define which variables will be represented in the graph.
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = date_collected, y = dry_weight_g))
+```
+
+
+## Add layers
+
+Plots in `ggplot2` are constructed by adding layers using `+`.
+
+Most graphical layers are functions that start with `geom_...()`.
+
+The visual properties of the plot are specified using the `aes()` function.
+
+- `x` and `y` define the variables displayed on the axes.
+- `color` controls the color of points or lines.
+- `fill` controls the fill color of objects.
+- `shape` controls the shape of points.
+- `size` controls the size of graphical elements.
+
+### geom_point()
+
+`geom_point()` creates a scatter plot.
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = date_collected, y = dry_weight_g)) +
+  geom_point()
+```
+
+### geom_histogram()
+
+`geom_histogram()` shows the distribution of a continuous variable by dividing the observations into intervals called bins.
+
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = dry_weight_g)) +
+  geom_histogram(bins = 20)
+```
+
+### geom_boxplot()
+
+`geom_boxplot()` is useful for comparing the distribution of a continuous variable among different groups.
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = location, y = dry_weight_g)) +
+  geom_boxplot()
+```
+
+
+## Adjust your aesthetics
+
+Aesthetics can be used to represent additional variables in the graph.
+
+For example, we can use color to represent `location` and shape to represent `sampling`.
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = date_collected, y = dry_weight_g, color = location, shape = sampling)) +
+  geom_point()
+```
+
+When a variable is written inside `aes()`, `ggplot2` creates a graphical representation of that variable and usually creates a legend automatically.
+
+We can also define a visual property without mapping it to a variable.
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = date_collected, y = dry_weight_g)) +
+  geom_point(color = "blue", size = 2)
+```
+
+Here, all points have the same color and size because `color` and `size` are outside `aes()`.
+
+## scale_...()
+
+The `scale_...()` functions are used to control how variables are represented in the graph.
+
+They can be used to modify colors, shapes, axis values, breaks, labels, and legends.
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = date_collected, y = dry_weight_g, color = location, shape = sampling)) +
+  geom_point() +
+  scale_color_discrete(name = "Location") +
+  scale_shape_discrete(name = "Sampling") 
+```
+
+
+Scale color and shape
+
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = date_collected, y = dry_weight_g, color = location, shape = sampling)) +
+  geom_point() +
+  scale_color_manual(values = c("lightblue", "darkred", "orange"), name = "Location") +
+  scale_shape_manual(values = c(16, 17, 15, 14), name = "Sampling")
+
+```
+
+
+We can also control the values displayed on continuous axes.
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = date_collected, y = dry_weight_g)) +
+  geom_point() +
+  scale_y_continuous(breaks = seq(0, 450, 50))
+```
+
+
+Because `date_collected` is a date variable, we can control how dates appear on the x-axis using `scale_x_date()`.
+
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = date_collected, y = dry_weight_g, color = location, shape = sampling)) +
+  geom_point() + 
+  scale_x_date(date_breaks = "15 days", date_labels = "%b %d")
+```
+
+
+## coord_cartesian() 
+
+`coord_cartesian()` changes the portion of the graph that is displayed without removing observations from the dataset.
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = date_collected, y = dry_weight_g)) +
+  geom_point() +
+  coord_cartesian(ylim = c(0, 300))
+```
+
+## labs()
+
+The `labs()` function is used to modify axis labels, titles, subtitles, captions, and legend titles.
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = date_collected, y = dry_weight_g,
+             color = location, shape = sampling)) +
+  geom_point() +
+  scale_y_continuous(breaks = seq(0, 450, 50)) +
+  scale_x_date(date_breaks = "15 days", date_labels = "%b %d") +
+  labs(
+    x = "Date",
+    y = "Dry Weight (g)",
+    title = "Biomass per day colected",
+    color = "Location",
+    shape = "Sampling"
+  )
+```
+
+
+## facet()
+
+Faceting splits a graph into multiple panels according to a categorical variable.
+
+`facet_wrap()` is useful when we want to create one plot for each level of a variable.
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = date_collected, y = dry_weight_g, color = system, shape = sampling)) +
+  geom_jitter() +
+  facet_wrap(~location) +
+  scale_y_continuous(breaks = seq(0,450,50)) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b") +
+  labs(x = "Date", y = "Dry Weight (g)")
+
+```
+
+## Themes
+
+Themes control the appearance of the graph, including the background, grid lines, axis text, and other non-data elements.
+
+```{r}
+dat_cb |> 
+  ggplot(aes(x = date_collected, y = dry_weight_g, color = system, shape = sampling)) +
+  facet_wrap(~location) +
+  geom_jitter() + 
+  scale_y_continuous(breaks = seq(0,450,50)) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b") +
+  labs(x = "Date", y = "Dry Weight (g)") +
+  theme_minimal()
+```
+
+Some commonly used themes are:
+
+```{r, eval=FALSE}
+theme_minimal()
+theme_classic()
+theme_bw()
+theme_dark()
+```
+
+## geom_tile()
+
+`geom_tile()` creates rectangles arranged according to x and y coordinates.  
+It is useful for creating heatmaps, field maps, and experimental layout diagrams.
+
+
+```{r}
+dat_plot <- dat_cb |>
+  mutate(
+    column = as.numeric(substr(plot, 1, 1)),
+    plot = as.factor(plot)
+  ) |>
+  distinct(plot, row, .keep_all = TRUE) |> 
+  select(plot, row, system, column)
+
+dat_plot |>
+  ggplot(aes(x = column, y = row, fill = system)) +
+  geom_tile()
+
+```
+
+We can improve the visualization by adding borders and labels:
+
+```{r}
+dat_plot |>
+  ggplot(aes(x = column, y = row, fill = system)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = paste0("R:", row, "  C:", column)), size = 3) +
+  labs(x = "Column", y = "Row", fill = "System") +
+  theme_minimal()
+```
+
